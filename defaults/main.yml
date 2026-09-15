@@ -24,6 +24,7 @@ unattended_upgrades_debug_output: False
 unattended_upgrades_allow_downgrade: False
 unattended_upgrades_allow_apt_mark_fallback: True
 
+unattended_upgrades_dl_limiting: False
 unattended_upgrades_dl_limit: 70
 unattended_upgrades_syslog_enable: False
 unattended_upgrades_syslog_facility: "daemon"

@@ -50,7 +50,7 @@ Unattended-Upgrade::Verbose "{{ unattended_upgrades_verbose | string | lower }}"
 Unattended-Upgrade::Debug "{{ unattended_upgrades_debug_output | string | lower }}";
 Unattended-Upgrade::Allow-downgrade "{{ unattended_upgrades_allow_downgrade | string | lower }}";
 Unattended-Upgrade::Allow-APT-Mark-Fallback "{{ unattended_upgrades_allow_apt_mark_fallback | string | lower }}";
-{% if unattended_upgrades_dl_limit %}
+{% if unattended_upgrades_dl_limiting %}
 Acquire::http::Dl-Limit "{{ unattended_upgrades_dl_limit }}";
 {% endif %}
 {% if unattended_upgrades_syslog_enable %}
