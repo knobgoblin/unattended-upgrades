@@ -25,6 +25,9 @@ Unattended-Upgrade::Origins-Pattern {
         "origin=Debian,codename=${distro_codename},label=Debian";
         "origin=Debian,codename=${distro_codename},label=Debian-Security";
         "origin=Debian,codename=${distro_codename}-security,label=Debian-Security";
+        {% for origin in unattended_upgrades_additional_repos %}
+        "\"{{ origin }}\"";
+        {% endfor %}
 };
 
 Unattended-Upgrade::Package-Blacklist {
@@ -32,23 +35,31 @@ Unattended-Upgrade::Package-Blacklist {
     // Use Python regexes
 };
 
-Unattended-Upgrade::AutoFixInterruptedDpkg "true";
-Unattended-Upgrade::MinimalSteps "true";
-Unattended-Upgrade::InstallOnShutdown "false";
-Unattended-Upgrade::Mail jonathan@only1klaus.com;
-Unattended-Upgrade::MailReport "on-change";
-Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
-Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
-Unattended-Upgrade::Remove-Unused-Dependencies "false";
-Unattended-Upgrade::Automatic-Reboot "false";
-Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
-Unattended-Upgrade::Automatic-Reboot-Time "now";
-// Acquire::http::Dl-Limit "70";
-// Unattended-Upgrade::SyslogEnable "false";
-// Unattended-Upgrade::SyslogFacility "daemon";
-// Unattended-Upgrade::OnlyOnACPower "true";
-// Unattended-Upgrade::Skip-Updates-On-Metered-Connections "true";
-// Unattended-Upgrade::Verbose "false";
-// Unattended-Upgrade::Debug "false";
-// Unattended-Upgrade::Allow-downgrade "false";
-// Unattended-Upgrade::Allow-APT-Mark-Fallback "true";
+Unattended-Upgrade::AutoFixInterruptedDpkg "\"{{ unattended_upgrades_autofix_interrupted_dpkg | string | lower }}\"";
+Unattended-Upgrade::MinimalSteps "\"{{ unattended_upgrades_minimal_steps | string | lower }}\"";
+Unattended-Upgrade::InstallOnShutdown "\"{{ unattended_upgrades_install_on_shutdown | string | lower }}\"";
+Unattended-Upgrade::Mail "\"{{ unattended_upgrades_mail }}\"";
+Unattended-Upgrade::MailReport "\"{{ unattended_upgrades_mail_report }}\"";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "\"{{ unattended_upgrades_remove_unused_kernel_packages | string | lower }}\"";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "\"{{ unattended_upgrades_remove_new_unused_dependencies | string | lower }}\"";
+Unattended-Upgrade::Remove-Unused-Dependencies "\"{{ unattended_upgrades_remove_unused_dependencies | string | lower }}\"";
+Unattended-Upgrade::Automatic-Reboot "\"{{ unattended_upgrades_automatic_reboot | string | lower }}\"";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "\"{{ unattended_upgrades_automatic_reboot_with_users | string | lower }}\"";
+Unattended-Upgrade::Automatic-Reboot-Time "\"{{ unattended_upgrades_automatic_reboot_time }}\"";
+Unattended-Upgrade::Verbose "\"{{ unattended_upgrades_verbose | string | lower }}\"";
+Unattended-Upgrade::Debug "\"{{ unattended_upgrades_debug_output | string | lower }}\"";
+Unattended-Upgrade::Allow-downgrade "\"{{ unattended_upgrades_allow_downgrade | string | lower }}\"";
+Unattended-Upgrade::Allow-APT-Mark-Fallback "\"{{ unattended_upgrades_allow_apt_mark_fallback | string | lower }}\"";
+{% if unattended_upgrades_dl_limit %}
+Acquire::http::Dl-Limit "{{ unattended_upgrades_dl_limit }}";
+{% endif %}
+{% if unattended_upgrades_syslog_enable %}
+Unattended-Upgrade::SyslogEnable "true";
+Unattended-Upgrade::SyslogFacility "\"{{ unattended_upgrades_syslog_facility }}\"";
+{% endif %}
+{% if unattended_upgrades_battery_system %}
+Unattended-Upgrade::OnlyOnACPower "\"{{ not unattended_upgrades_upgrade_on_battery | string | lower }}\"";
+{% endif %}
+{% if unattended_upgrades_skip_on_metered_connections %}
+Unattended-Upgrade::Skip-Updates-On-Metered-Connections "true";
+{% endif %}

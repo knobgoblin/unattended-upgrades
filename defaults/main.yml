@@ -6,4 +6,27 @@ unattended_upgrades_debug_group: nobody
 unattended_upgrades_conf_directory_owner: root
 unattended_upgrades_conf_directory_group: root
 unattended_upgrades_conf_directory: /etc/apt/apt.conf.d
+
 unattended_upgrades_additional_repos: []
+unattended_upgrades_autofix_interrupted_dpkg: True
+unattended_upgrades_minimal_steps: True
+unattended_upgrades_install_on_shutdown: False
+unattended_upgrades_mail: "user@nowhere.loopback.com"
+unattended_upgrades_mail_report: "on-change"
+unattended_upgrades_remove_unused_kernel_packages: True
+unattended_upgrades_remove_new_unused_dependencies: True
+unattended_upgrades_remove_unused_dependencies: False
+unattended_upgrades_automatic_reboot: False
+unattended_upgrades_automatic_reboot_with_users: True
+unattended_upgrades_automatic_reboot_time: "now"
+unattended_upgrades_verbose: False
+unattended_upgrades_debug_output: False
+unattended_upgrades_allow_downgrade: False
+unattended_upgrades_allow_apt_mark_fallback: True
+
+unattended_upgrades_dl_limit: 70
+unattended_upgrades_syslog_enable: False
+unattended_upgrades_syslog_facility: "daemon"
+unattended_upgrades_battery_system: False
+unattended_upgrades_upgrade_on_battery: False
+unattended_upgrades_skip_on_metered_connections: False
