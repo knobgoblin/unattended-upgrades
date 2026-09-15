@@ -1,0 +1,100 @@
+---
+- name: Ensure that bind9 is installed and up to date
+  apt:
+    name: unattended-upgrades
+    state: latest
+  when: not unattended_upgradees_debug
+
+- name: Ensure unattended-upgrades configuration directory
+  file:
+    path: "{{ unattended_upgrades_conf_directory }}"
+    state: directory
+    owner: "{{ unattended_upgrades_conf_directory_owner }}"
+    group: "{{ unattended_upgrades_conf_directory_group }}"
+    mode: '0755'
+
+- name: Populate custom unattended-upgrades configuration
+  template:
+    src: named.conf.options.j2
+    dest: "{{ unattended_upgrades_conf_directory }}/named.conf.options"
+    owner: "{{ unattended_upgrades_owner }}"
+    group: "{{ unattended_upgrades_group }}"
+    mode: '0644'
+
+- name: Create zone files
+  copy:
+    content: "{{ item.contents }}"
+    dest: "{{ unattended_upgrades_conf_directory}}/{{ item.filename }}"
+    owner: "{{ unattended_upgrades_owner }}"
+    group: "{{ unattended_upgrades_group }}"
+    mode: '0644'
+  loop: "{{ unattended_upgrades_zones }}"
+  when: not unattended_upgrades_from_files
+
+- name: Create empty zone file configuration
+  set_fact:
+    unattended_upgrades_zone_config: ''
+
+- name: Render zone file configuration
+  set_fact:
+    unattended_upgrades_zone_config: "{{ bind_zone_config }}zone {{ item.filename }} {\n        type master;\n        file \"{{ bind_conf_directory }}/{{ item.filename }}\";\n};\n\n"
+  loop: "{{ unattended_upgrades_zones }}"
+  when: not unattended_upgrades_from_files
+
+- name: Ensure that zone file configuration is read and applied
+  lineinfile:
+    path: "{{ unattended_upgrades_conf_directory }}/{{ bind_local_conf_file }}"
+    line: "include \"{{ unattended_upgrades_conf_directory }}/{{ bind_zone_file_config }}\";"
+    create: True
+    owner: "{{ unattended_upgrades_owner }}"
+    group: "{{ unattended_upgrades_group }}"
+    mode: '0644'
+
+- name: Get zone file datafile names
+  set_fact:
+    zone_datafiles: "{{ lookup('fileglob', unattended_upgrades_host_info_source_directory ~ '/*.zonedata', wantlist=True) }}"
+  when: unattended_upgrades_from_files
+
+- name: Get reverse zone file datafile names
+  set_fact:
+    reverse_zone_datafiles: "{{ lookup('fileglob', unattended_upgrades_host_info_source_directory ~ '/*.reverse', wantlist=True) }}"
+  when: unattended_upgrades_from_files
+
+- name: Get all zone datafile names
+  set_fact:
+    all_zone_datafiles: "{{ zone_datafiles | union(reverse_zone_datafiles) }}"
+  when: unattended_upgrades_from_files
+
+- name: Render zone file configuration programmatically
+  set_fact:
+    unattended_upgrades_zone_config: "{{ bind_zone_config}}zone {{ item | basename | regex_replace('\\.(zonedata|reverse)$', '') }} {\n        type master;\n        file \"{{ bind_conf_directory }}/{{ item | basename| regex_replace('\\.(zonedata|reverse)$', '') }}\";\n};\n\n"
+  loop: "{{ all_zone_datafiles }}"
+  when: unattended_upgrades_from_files  
+
+- name: Create zone file configuration
+  copy:
+    content: "{{ unattended_upgrades_zone_config }}"
+    dest: "{{ unattended_upgrades_conf_directory }}/{{ bind_zone_file_config }}"
+    owner: "{{ unattended_upgrades_owner }}"
+    group: "{{ unattended_upgrades_group }}"
+    mode: '0644'
+
+- name: Render zone file
+  include_tasks: render-forward-zone.yml
+  loop: "{{ zone_datafiles }}"
+  loop_control:
+    loop_var: datafile_name
+  when: unattended_upgrades_from_files
+
+- name: Render reverse zone files
+  include_tasks: render-reverse-zone.yml
+  loop: "{{ reverse_zone_datafiles }}"
+  loop_control:
+    loop_var: datafile_name
+  when: unattended_upgrades_from_files
+
+- name: Restart bind9 server to consume updated configuration
+  service:
+    name: named
+    state: restarted
+  when: not unattended_upgrades_debug

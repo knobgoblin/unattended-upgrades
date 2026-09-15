@@ -1,0 +1,5 @@
+---
+- include_tasks: debug.yml
+  when: unattended_upgrades_debug
+
+- include_tasks: setup-unattended-upgrades.yml

@@ -1,0 +1,54 @@
+// Unattended-Upgrade::Origins-Pattern controls which packages are
+// upgraded.
+
+// Lines below have the format "keyword=value,...".  A
+// package will be upgraded only if the values in its metadata match
+// all the supplied keywords in a line.  (In other words, omitted
+// keywords are wild cards.) The keywords originate from the Release
+// file, but several aliases are accepted.  The accepted keywords are:
+//   a,archive,suite (eg, "stable")
+//   c,component     (eg, "main", "contrib", "non-free")
+//   l,label         (eg, "Debian", "Debian-Security")
+//   o,origin        (eg, "Debian", "Unofficial Multimedia Packages")
+//   n,codename      (eg, "jessie", "jessie-updates")
+//     site          (eg, "http.debian.net")
+// The available values on the system are printed by the command
+// "apt-cache policy", and can be debugged by running
+// "unattended-upgrades -d" and looking at the log file.
+//
+// Within lines unattended-upgrades allows 2 macros whose values are
+// derived from /etc/debian_version:
+//   ${distro_id}            Installed origin.
+//   ${distro_codename}      Installed codename (eg, "buster")
+
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Debian,codename=${distro_codename},label=Debian";
+        "origin=Debian,codename=${distro_codename},label=Debian-Security";
+        "origin=Debian,codename=${distro_codename}-security,label=Debian-Security";
+};
+
+Unattended-Upgrade::Package-Blacklist {
+    // Strings, one per line, terminated with ';'
+    // Use Python regexes
+};
+
+Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+Unattended-Upgrade::MinimalSteps "true";
+Unattended-Upgrade::InstallOnShutdown "false";
+Unattended-Upgrade::Mail jonathan@only1klaus.com;
+Unattended-Upgrade::MailReport "on-change";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
+Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
+Unattended-Upgrade::Automatic-Reboot-Time "now";
+// Acquire::http::Dl-Limit "70";
+// Unattended-Upgrade::SyslogEnable "false";
+// Unattended-Upgrade::SyslogFacility "daemon";
+// Unattended-Upgrade::OnlyOnACPower "true";
+// Unattended-Upgrade::Skip-Updates-On-Metered-Connections "true";
+// Unattended-Upgrade::Verbose "false";
+// Unattended-Upgrade::Debug "false";
+// Unattended-Upgrade::Allow-downgrade "false";
+// Unattended-Upgrade::Allow-APT-Mark-Fallback "true";

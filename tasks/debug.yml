@@ -1,0 +1,11 @@
+---
+- name: Set debug BIND variables
+  set_fact:
+    unattended_upgrades_conf_directory: "{{ unattended_upgrades_debug_config_path }}"
+    unattended_upgrades_conf_directory_owner: "{{ unattended_upgrades_debug_owner }}"
+    unattended_upgrades_conf_directory_group: "{{ unattended_upgrades_debug_group }}"
+
+- name: Add nobody group 
+  group:
+    name: nobody
+    state: present

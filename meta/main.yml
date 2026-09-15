@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Jonathan Elliott
+  description: Install and configure unattended-upgrades on Debian
+  company: Private
+  license: Private
+  min_ansible_version: 2.13.2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bullseye/sid
+    - name: Debian
+      versions:
+        - 11.4
+  categories:
+    - unattended-upgrades

@@ -1,0 +1,9 @@
+---
+unattended_upgrades_debug: False
+unattended_upgrades_debug_config_path: /var/tmp/unattended_upgrades_debug
+unattended_upgrades_debug_owner: nobody
+unattended_upgrades_debug_group: nobody
+unattended_upgrades_conf_directory_owner: root
+unattended_upgrades_conf_directory_group: root
+unattended_upgrades_conf_directory: /etc/apt/apt.conf.d
+unattended_upgrades_additional_repos: []
