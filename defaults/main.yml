@@ -30,3 +30,7 @@ unattended_upgrades_syslog_facility: "daemon"
 unattended_upgrades_battery_system: False
 unattended_upgrades_upgrade_on_battery: False
 unattended_upgrades_skip_on_metered_connections: False
+
+
+unattended_upgrades_apt_periodic_update_package_lists: "1"
+unattended_upgrades_apt_periodic_unattended_upgrade: "1"

@@ -20,7 +20,15 @@
     owner: "{{ unattended_upgrades_conf_directory_owner }}"
     group: "{{ unattended_upgrades_conf_directory_group }}"
     mode: '0644'
-  
+
+- name: Populate APT periodic configuration
+  template:
+    src: 20auto-ugprades.j2
+    dest: "{{ unattended_upgrades_conf_directory }}/20auto-ugprades"
+    owner: "{{ unattended_upgrades_conf_directory_owner }}"
+    group: "{{ unattended_upgrades_conf_directory_group }}"
+    mode: '0644'
+
 - name: Restart unattended-upgrades service to consume updated configuration
   service:
     name: unattended-upgrades
