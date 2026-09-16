@@ -23,8 +23,8 @@
 
 - name: Populate APT periodic configuration
   template:
-    src: 20auto-ugprades.j2
-    dest: "{{ unattended_upgrades_conf_directory }}/20auto-ugprades"
+    src: 20auto-upgrades.j2
+    dest: "{{ unattended_upgrades_conf_directory }}/20auto-upgrades"
     owner: "{{ unattended_upgrades_conf_directory_owner }}"
     group: "{{ unattended_upgrades_conf_directory_group }}"
     mode: '0644'
